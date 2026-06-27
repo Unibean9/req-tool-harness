@@ -95,8 +95,19 @@ body::before {
   text-transform: uppercase;
   color: var(--trace);
   white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
 }
 .nav-brand b { color: var(--ink-bright); font-weight: 600; }
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 0 0 1px var(--grid), 0 0 14px #ff7a4522;
+}
 .sheet-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
 .sheet-tabs a {
   font-family: var(--mono);
