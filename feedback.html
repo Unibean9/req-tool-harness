@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harness Map · Sheet 05 — Feedback</title>
-<meta name="description" content="Vòng phản hồi của harness: critique judge, quality gate, readiness và impact ripple.">
+<title>Harness Map · Feedback</title>
+<meta name="description" content="Agent tự chấm điểm mình trước khi được phép chốt.">
 <link rel="stylesheet" href="harness.css">
 </head>
 <body>
@@ -13,12 +13,12 @@
   <div class="nav-inner">
     <div class="nav-brand"><b>req-tool</b> · harness map</div>
     <div class="sheet-tabs">
-      <a href="index.html"><span class="n">00</span> Sơ đồ tổng</a>
-      <a href="instructions.html"><span class="n">01</span> Instructions</a>
-      <a href="tools.html"><span class="n">02</span> Tools</a>
-      <a href="states.html"><span class="n">03</span> States</a>
-      <a href="env.html"><span class="n">04</span> Env</a>
-      <a href="feedback.html" class="is-active"><span class="n">05</span> Feedback</a>
+      <a href="index.html">Toàn cảnh</a>
+      <a href="instructions.html">Instructions</a>
+      <a href="tools.html">Tools</a>
+      <a href="states.html">States</a>
+      <a href="env.html">Env</a>
+      <a href="feedback.html" class="is-active">Feedback</a>
     </div>
   </div>
 </nav>
@@ -26,92 +26,87 @@
 <div class="wrap">
 
   <header class="sheet-head">
-    <div class="eyebrow">Sheet 05 / 05 · Component callout — cạnh quay lại <b style="color:var(--ink-bright)">analyze</b></div>
+    <div class="eyebrow">Đoạn nóng quay lại trạm suy nghĩ</div>
     <h1 class="sheet-title">Phản hồi là thứ<br><span class="accent">đóng vòng lặp</span> lại.</h1>
-    <p class="lead">Judge chấm draft, ghi <code style="font-family:var(--mono);color:var(--trace)">quality_report</code> vào state, rồi route quay lại <b>analyze</b> để sửa — hoặc mở khóa <code style="font-family:var(--mono);color:var(--trace)">finalize</code> khi qua gate. Đây là đoạn amber khép kín trên Sheet 00.</p>
+    <p class="lead">Đây là điều tách agent này khỏi một chatbot thường: trước khi được phép tuyên bố hoàn tất, nó phải tự chấm điểm bản nháp của chính mình — và nếu chưa đạt thì quay lại sửa.</p>
   </header>
 
   <section class="section" style="padding-top:8px">
     <div class="note signal">
       <div class="nl">Hình dung thế nào</div>
-      <p>Đây là điểm khác biệt lớn nhất so với một chatbot thường: agent <b>tự chấm điểm bản nháp của chính mình</b> trước khi được phép chốt. Một con judge độc lập soi bản nháp theo từng tiêu chí (rõ ràng, đầy đủ, nhất quán, kiểm thử được…) và cho điểm 0–1.</p>
-      <p>Nếu chưa đạt ngưỡng, cổng <em>finalize</em> đóng và agent buộc quay lại sửa — đúng <b>đoạn amber khép kín</b> bạn thấy ở Sheet 00. Chính vòng phản hồi này là lý do agent không "bịa cho xong rồi nộp": muốn kết thúc thì phải qua kiểm định thật.</p>
+      <p>Một người soát độc lập đọc bản nháp theo từng tiêu chí và cho điểm. Nếu đạt ngưỡng, cánh cửa "chốt" mở ra. Nếu chưa, cửa đóng và agent buộc quay lại sửa.</p>
+      <p>Chính vòng này là <b>đoạn nóng khép kín</b> bạn thấy ở trang Toàn cảnh — lý do agent không thể "viết bừa cho xong rồi nộp": muốn kết thúc thì phải qua kiểm định thật.</p>
     </div>
   </section>
 
-  <!-- FEEDBACK LOOP -->
+  <!-- LOOP -->
   <section class="section">
-    <div class="section-label"><span class="sn">◢</span> Vòng phản hồi</div>
+    <div class="section-label"><span class="sn">◢</span> Vòng phản hồi, kể bằng lời</div>
     <div class="panel ticks">
       <div class="flow">
-        <span class="node">write_draft</span><span class="arr">→</span>
-        <span class="node s">run_critique</span><span class="arr">→</span>
-        <span class="node">quality_report → state</span><span class="arr">→</span>
-        <span class="node s">gate: pass?</span>
-        <span class="arr">→</span>
-        <span class="node">finalize · hoặc · revise → analyze</span>
+        <span class="node">Có bản nháp</span><span class="arr">→</span>
+        <span class="node s">Tự chấm điểm</span><span class="arr">→</span>
+        <span class="node">Ghi kết quả vào trí nhớ</span><span class="arr">→</span>
+        <span class="node s">Đạt ngưỡng?</span><span class="arr">→</span>
+        <span class="node">Chốt · hoặc · quay lại sửa</span>
       </div>
-      <p class="p" style="margin-top:16px;margin-bottom:0"><code style="font-family:var(--mono);color:var(--trace)">finalize</code> bị chặn nếu <code style="font-family:var(--mono);color:var(--trace)">quality_gate_result != "pass"</code> hoặc thiếu report. <code style="font-family:var(--mono);color:var(--trace)">run_critique</code> bị chặn sau CRITIQUE_ROUNDS_MAX; ngưỡng <code style="font-family:var(--mono);color:var(--trace)">critique_score_threshold</code>.</p>
+      <p class="p" style="margin-top:16px;margin-bottom:0">Cửa "chốt" chỉ mở khi điểm vượt ngưỡng. Việc tự chấm cũng không được lặp vô hạn — sau một số vòng nó dừng lại để tránh sa lầy, và đề xuất bước kế tiếp: chốt, sửa tiếp, hay nhờ người can thiệp.</p>
     </div>
   </section>
 
-  <!-- CRITIQUE MODES -->
+  <!-- CRITERIA -->
   <section class="section">
-    <div class="section-label"><span class="sn">◢</span> Judge — 9 critique mode · app/graphs/critique.py:16</div>
+    <div class="section-label"><span class="sn">◢</span> Chấm theo những góc nào</div>
+    <p class="p">Người soát có thể nhìn bản nháp qua nhiều lăng kính khác nhau, mỗi lần một góc:</p>
     <div class="chips">
-      <span class="chip t">clarity</span><span class="chip t">completeness</span><span class="chip t">consistency</span><span class="chip t">feasibility</span><span class="chip t">testability</span><span class="chip t">traceability</span><span class="chip t">six_hats</span><span class="chip t">swot</span><span class="chip t">risk_review</span>
+      <span class="chip t">rõ ràng</span><span class="chip t">đầy đủ</span><span class="chip t">nhất quán</span><span class="chip t">khả thi</span><span class="chip t">kiểm thử được</span><span class="chip t">truy vết được</span><span class="chip t">sáu chiếc mũ</span><span class="chip t">điểm mạnh – yếu</span><span class="chip t">soát rủi ro</span>
     </div>
     <div class="card" style="margin-top:18px">
-      <div class="kind">QualityReport</div>
-      <div class="desc"><code style="font-family:var(--mono);color:var(--trace)">mode</code> · <code style="font-family:var(--mono);color:var(--trace)">score</code> (0.0–1.0) · <code style="font-family:var(--mono);color:var(--trace)">findings</code> · <code style="font-family:var(--mono);color:var(--trace)">suggestions</code> · <code style="font-family:var(--mono);color:var(--trace)">blocking_issues</code> · <code style="font-family:var(--mono);color:var(--trace)">quality_gate_result</code> · <code style="font-family:var(--mono);color:var(--trace)">recommended_next_action</code> (finalize | revise | escalate).</div>
+      <div class="kind">kết quả mỗi lần chấm</div>
+      <div class="desc">Một điểm số kèm danh sách phát hiện, gợi ý sửa, những vấn đề chặn không cho chốt, kết luận đạt hay chưa đạt cửa, và lời khuyên về bước tiếp theo.</div>
     </div>
   </section>
 
-  <!-- READINESS + CANDIDATE -->
+  <!-- READINESS + STATES -->
   <section class="section">
-    <div class="section-label"><span class="sn">◢</span> Readiness &amp; candidate state</div>
+    <div class="section-label"><span class="sn">◢</span> Sẵn sàng tới đâu</div>
     <div class="grid cols-2">
       <div class="card">
-        <div class="kind">run_readiness_check · readiness.py</div>
-        <div class="name">Đánh giá 10 chiều</div>
-        <div class="desc">Phủ section, không placeholder dở, không assumption treo, đủ predecessor, ngưỡng sub-dimension, stall, nhất quán đồ thị, link integrity, tiến độ chuỗi, xác nhận user.</div>
+        <div class="kind">soát toàn diện</div>
+        <div class="name" style="font-family:var(--display)">Mười điểm kiểm tra</div>
+        <div class="desc">Đã phủ đủ các phần chưa, còn ô trống không, còn giả định treo không, đã có tài liệu tiền đề chưa, các liên kết có lành lặn không, người dùng đã xác nhận chưa… mỗi điểm một câu hỏi có/không.</div>
       </div>
       <div class="card">
-        <div class="kind">ArtifactCandidateReadiness · synthesis</div>
-        <div class="name">4 trạng thái draft</div>
+        <div class="kind">bản nháp đang ở đâu</div>
+        <div class="name" style="font-family:var(--display)">Bốn mức trưởng thành</div>
         <div class="chips" style="margin-top:10px">
-          <span class="chip d">POORLY_STRUCTURED</span>
-          <span class="chip d">WELL_STRUCTURED_BUT_INCOMPLETE</span>
-          <span class="chip s">NEEDS_CONFIRMATION</span>
-          <span class="chip t">SUFFICIENT</span>
+          <span class="chip d">bố cục còn lộn xộn</span>
+          <span class="chip d">đúng bố cục nhưng còn thiếu</span>
+          <span class="chip s">chờ xác nhận</span>
+          <span class="chip t">đủ để chốt</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- IMPACT RIPPLE -->
+  <!-- IMPACT -->
   <section class="section">
-    <div class="section-label"><span class="sn">◢</span> Impact ripple — phản hồi chéo artifact · decision_graph.py:349</div>
+    <div class="section-label"><span class="sn">◢</span> Khi một thay đổi vang sang tài liệu khác</div>
     <div class="panel ticks">
-      <p class="p" style="margin:0"><code style="font-family:var(--mono);color:var(--trace)">run_impact_analysis</code> đánh dấu node bị ảnh hưởng bởi thay đổi chéo artifact thành <span class="chip s">needs_confirmation</span>. Bất biến: không viết lại statement, không chạm node superseded, duyệt artifact-link với visited-set guard. LLM tùy chọn chọn ID bị ảnh hưởng; nếu không có thì khớp token mặc định.</p>
-    </div>
-    <div class="xlinks">
-      <a class="xlink" href="states.html">ghi quality_report vào <span class="n">Sheet 03 States</span></a>
-      <a class="xlink" href="tools.html">run_critique là tool ở <span class="n">Sheet 02</span></a>
-      <a class="xlink" href="index.html">đoạn amber khép kín → <span class="n">Sheet 00 Master</span></a>
+      <p class="p" style="margin:0">Một tài liệu hiếm khi đứng một mình. Khi có thay đổi ở nơi này, agent có thể dò xem những phần nào ở tài liệu liên quan bị ảnh hưởng, rồi đánh dấu chúng <span class="chip s">cần xác nhận lại</span> — mà không tự ý viết lại nội dung hay đụng vào những gì đã thay thế. Nhờ vậy các tài liệu không lặng lẽ lệch nhau theo thời gian.</p>
     </div>
   </section>
 
-  <div class="titleblock">
-    <div class="tb"><div class="k">Component</div><div class="v">Feedback — critique · gate · readiness</div></div>
-    <div class="tb"><div class="k">Sheet</div><div class="v s">05 / 05</div></div>
-    <div class="tb"><div class="k">Source</div><div class="v files">app/graphs/critique.py<br>app/graphs/readiness.py</div></div>
-  </div>
-
-  <div class="pager">
-    <a href="env.html">← Sheet 04 · Env</a>
-    <a href="index.html">Sheet 00 · Master ↺</a>
-  </div>
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Phóng to bộ phận khác</div>
+    <div class="xlinks">
+      <a class="xlink" href="index.html">Toàn cảnh</a>
+      <a class="xlink" href="instructions.html">Instructions</a>
+      <a class="xlink" href="tools.html">Tools</a>
+      <a class="xlink" href="states.html">States</a>
+      <a class="xlink" href="env.html">Env</a>
+    </div>
+  </section>
   <div style="height:60px"></div>
 
 </div>

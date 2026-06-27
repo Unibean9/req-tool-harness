@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harness Map · Sheet 01 — Instructions</title>
-<meta name="description" content="Instructions của harness: stack 4 lớp tĩnh và các khối inject động theo từng lượt.">
+<title>Harness Map · Instructions</title>
+<meta name="description" content="Lời dặn cho agent: phần cố định và phần thêm riêng cho từng lượt.">
 <link rel="stylesheet" href="harness.css">
 </head>
 <body>
@@ -13,12 +13,12 @@
   <div class="nav-inner">
     <div class="nav-brand"><b>req-tool</b> · harness map</div>
     <div class="sheet-tabs">
-      <a href="index.html"><span class="n">00</span> Sơ đồ tổng</a>
-      <a href="instructions.html" class="is-active"><span class="n">01</span> Instructions</a>
-      <a href="tools.html"><span class="n">02</span> Tools</a>
-      <a href="states.html"><span class="n">03</span> States</a>
-      <a href="env.html"><span class="n">04</span> Env</a>
-      <a href="feedback.html"><span class="n">05</span> Feedback</a>
+      <a href="index.html">Toàn cảnh</a>
+      <a href="instructions.html" class="is-active">Instructions</a>
+      <a href="tools.html">Tools</a>
+      <a href="states.html">States</a>
+      <a href="env.html">Env</a>
+      <a href="feedback.html">Feedback</a>
     </div>
   </div>
 </nav>
@@ -26,130 +26,112 @@
 <div class="wrap">
 
   <header class="sheet-head">
-    <div class="eyebrow">Sheet 01 / 05 · Component callout — node <b style="color:var(--ink-bright)">analyze</b></div>
-    <h1 class="sheet-title">Một prompt được <span class="accent">ráp lại</span><br>mỗi lượt — không cố định.</h1>
-    <p class="lead">Phần <b>tĩnh</b> là stack 4 lớp markdown được cache theo <code style="font-family:var(--mono);color:var(--trace)">(role, has_draft)</code>. Phần <b>động</b> là các khối bơm vào ngay trong <code style="font-family:var(--mono);color:var(--trace)">analyze_node</code> theo state hiện tại của lượt đó.</p>
+    <div class="eyebrow">Tại trạm suy nghĩ</div>
+    <h1 class="sheet-title">Lời dặn được<br><span class="accent">ráp lại</span> mỗi lượt.</h1>
+    <p class="lead">Trước khi agent quyết định làm gì, nó đọc một bộ lời dặn. Một phần là cố định — luật chơi không đổi. Một phần được thêm tươi mỗi lượt, tùy theo tình huống lúc đó. Cùng một bộ luật, nhưng hành vi đổi theo ngữ cảnh.</p>
   </header>
 
   <section class="section" style="padding-top:8px">
     <div class="note">
       <div class="nl">Hình dung thế nào</div>
-      <p>Hãy tưởng tượng mỗi lượt agent như một <b>cuộc họp ngắn</b>. Phần <em>tĩnh</em> là nội quy dán sẵn trên tường — không đổi giữa các cuộc họp: vai trò của bạn là gì, được phép làm gì, output phải đạt chuẩn nào.</p>
-      <p>Phần <em>động</em> là tờ ghi chú dán thêm cho riêng cuộc họp này: bản nháp hiện ra sao, mục nào còn thiếu, những sự thật đã chốt. LLM đọc <b>cả hai</b> trước khi quyết định bước tiếp theo — nên cùng một bộ nội quy vẫn cho hành vi khác nhau tùy tình huống.</p>
+      <p>Hãy tưởng tượng mỗi lượt như một <b>cuộc họp ngắn</b>. Phần <em>cố định</em> là nội quy dán sẵn trên tường — không đổi giữa các cuộc họp: vai trò của bạn là gì, được phép làm gì, kết quả phải đạt chuẩn nào.</p>
+      <p>Phần <em>tươi</em> là tờ ghi chú dán thêm cho riêng cuộc họp này: bản nháp đang ra sao, mục nào còn thiếu, những điều đã chốt. Agent đọc cả hai trước khi quyết định bước tiếp theo.</p>
     </div>
   </section>
 
-  <!-- STATIC STACK -->
+  <!-- STATIC -->
   <section class="section">
-    <div class="section-label"><span class="sn">TĨNH</span> Stack 4 lớp · app/instructions/__init__.py</div>
+    <div class="section-label"><span class="sn">CỐ ĐỊNH</span> Bốn lớp xếp chồng, không đổi giữa các lượt</div>
     <div class="stack">
       <div class="stack-item stat">
-        <span class="step-n">01</span>
+        <span class="step-n">1</span>
         <div class="body">
-          <div class="ti">01-contract.md</div>
-          <div class="sub">Policy nền — luật chơi chung, bất biến theo role.</div>
+          <div class="ti" style="font-family:var(--display)">Luật nền</div>
+          <div class="sub">Chính sách chung của agent — bất biến, áp cho mọi vai trò.</div>
         </div>
       </div>
       <div class="stack-item stat">
-        <span class="step-n">02</span>
+        <span class="step-n">2</span>
         <div class="body">
-          <div class="ti">role overlay — business-analyst.md | product-manager.md</div>
-          <div class="sub">Lớp phủ theo vai: BA cho artifact discovery, PM cho artifact delivery/testable.</div>
+          <div class="ti" style="font-family:var(--display)">Vai trò đang đóng</div>
+          <div class="sub">Lớp phủ theo việc: phân tích nghiệp vụ (khám phá) hay quản lý sản phẩm (bàn giao).</div>
         </div>
       </div>
       <div class="stack-item stat">
-        <span class="step-n">03</span>
+        <span class="step-n">3</span>
         <div class="body">
-          <div class="ti">02-decision-tools.md</div>
-          <div class="sub">Menu tool + policy quyết định khi nào dùng tool nào.</div>
+          <div class="ti" style="font-family:var(--display)">Cách chọn việc</div>
+          <div class="sub">Danh mục những việc làm được và nguyên tắc khi nào nên làm cái nào.</div>
         </div>
       </div>
       <div class="stack-item stat">
-        <span class="step-n">04</span>
+        <span class="step-n">4</span>
         <div class="body">
-          <div class="ti">03-output.md <span class="chip d">bỏ qua nếu chưa có draft</span></div>
-          <div class="sub">Governance về critique &amp; chất lượng output — chỉ nạp khi đã tồn tại bản nháp.</div>
+          <div class="ti" style="font-family:var(--display)">Chuẩn chất lượng đầu ra <span class="chip d">chỉ khi đã có bản nháp</span></div>
+          <div class="sub">Yêu cầu về việc tự rà soát và chốt — chỉ thêm vào khi đã tồn tại bản nháp để rà.</div>
         </div>
-      </div>
-    </div>
-    <p class="p" style="margin-top:16px">Kết quả ráp được cache trong <code style="font-family:var(--mono);color:var(--trace)">_assembled_cache[(role, has_draft)]</code> để tránh ráp lại thừa.</p>
-  </section>
-
-  <!-- DYNAMIC INJECTION -->
-  <section class="section">
-    <div class="section-label"><span class="sn">ĐỘNG</span> Khối bơm theo lượt · app/graphs/nodes.py:437–446</div>
-    <div class="grid cols-2">
-      <div class="card signal">
-        <div class="kind">inject · per turn</div>
-        <div class="name">artifact contract block</div>
-        <div class="desc">Kỳ vọng phủ 7 section + required headings của artifact_type, lấy từ document registry.</div>
-      </div>
-      <div class="card signal">
-        <div class="kind">inject · per turn</div>
-        <div class="name">tool selection workspace</div>
-        <div class="desc">Prompt định hướng chọn tool, dựng từ state + artifacts + draft_body hiện có.</div>
-      </div>
-      <div class="card signal">
-        <div class="kind">inject · nếu có</div>
-        <div class="name">draft block</div>
-        <div class="desc">Body bản nháp hiện tại để analyst soi delta cần bổ sung.</div>
-      </div>
-      <div class="card signal">
-        <div class="kind">inject · luôn giữ</div>
-        <div class="name">key facts block</div>
-        <div class="desc">Sự thật đã tích lũy — <b>không bao giờ bị nén</b> khi summarize. Ground truth.</div>
-      </div>
-      <div class="card signal">
-        <div class="kind">inject · feature-flag</div>
-        <div class="name">decision graph view</div>
-        <div class="desc">View render trực tiếp của các decision node, khi <code style="font-family:var(--mono);color:var(--trace)">decision_graph_enabled</code>.</div>
-      </div>
-      <div class="card">
-        <div class="kind">sticky</div>
-        <div class="name">locale</div>
-        <div class="desc">vi / en — set một lần ở triage rồi giữ nguyên suốt phiên.</div>
       </div>
     </div>
   </section>
 
-  <!-- ROLE MAPPING -->
+  <!-- DYNAMIC -->
   <section class="section">
-    <div class="section-label"><span class="sn">◢</span> Ánh xạ vai → artifact · app/instructions/__init__.py:29–53</div>
+    <div class="section-label"><span class="sn">TƯƠI</span> Những gì được thêm vào, tùy từng lượt</div>
     <div class="grid cols-2">
-      <div class="card">
-        <div class="kind">role overlay</div>
-        <div class="name t">business_analyst</div>
-        <div class="desc">Discovery.</div>
-        <div class="chips" style="margin-top:12px">
-          <span class="chip t">brd</span><span class="chip t">vision_objectives</span><span class="chip t">problem_statement</span><span class="chip t">stakeholder_register</span><span class="chip t">scope_capabilities</span><span class="chip t">business_rules</span><span class="chip t">constraints_assumptions</span><span class="chip t">risks_issues</span>
-        </div>
+      <div class="card signal">
+        <div class="name" style="font-family:var(--display);color:var(--signal)">Tài liệu cần những phần nào</div>
+        <div class="desc">Bố cục kỳ vọng của loại tài liệu đang viết, để agent biết còn thiếu phần gì.</div>
+      </div>
+      <div class="card signal">
+        <div class="name" style="font-family:var(--display);color:var(--signal)">Gợi ý chọn việc cho lúc này</div>
+        <div class="desc">Một bản tóm tắt tình huống hiện tại, giúp agent nghiêng về việc hợp lý nhất.</div>
+      </div>
+      <div class="card signal">
+        <div class="name" style="font-family:var(--display);color:var(--signal)">Bản nháp hiện tại</div>
+        <div class="desc">Nội dung đang có, để agent soi phần còn dở thay vì viết lại từ đầu.</div>
+      </div>
+      <div class="card signal">
+        <div class="name" style="font-family:var(--display);color:var(--signal)">Những điều đã chốt</div>
+        <div class="desc">Sự thật đã xác nhận — luôn được giữ nguyên, không bao giờ bị lược bỏ khi tóm tắt.</div>
+      </div>
+      <div class="card signal">
+        <div class="name" style="font-family:var(--display);color:var(--signal)">Bức tranh các quyết định</div>
+        <div class="desc">Toàn cảnh những quyết định đã có và quan hệ giữa chúng, để agent không mâu thuẫn với chính mình.</div>
       </div>
       <div class="card">
-        <div class="kind">role overlay</div>
-        <div class="name t">product_manager</div>
-        <div class="desc">Delivery / testable.</div>
-        <div class="chips" style="margin-top:12px">
-          <span class="chip t">prd</span><span class="chip t">functional_requirement</span><span class="chip t">use_case</span><span class="chip t">non_functional_requirement</span><span class="chip t">acceptance_criteria</span><span class="chip t">epic</span><span class="chip t">story</span><span class="chip t">sad</span>
-        </div>
+        <div class="name" style="font-family:var(--display)">Ngôn ngữ</div>
+        <div class="desc">Nhận ở câu đầu rồi giữ nguyên suốt phiên — Việt hay Anh.</div>
       </div>
     </div>
+  </section>
+
+  <!-- ROLES -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Hai vai trò, hai nhóm tài liệu</div>
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="kind">vai khám phá</div>
+        <div class="name" style="font-family:var(--display)">Phân tích nghiệp vụ</div>
+        <div class="desc">Làm rõ vấn đề, mục tiêu, các bên liên quan, phạm vi, quy tắc và rủi ro — những tài liệu trả lời câu hỏi "vì sao và cái gì".</div>
+      </div>
+      <div class="card">
+        <div class="kind">vai bàn giao</div>
+        <div class="name" style="font-family:var(--display)">Quản lý sản phẩm</div>
+        <div class="desc">Biến những điều đó thành yêu cầu kiểm thử được: chức năng, ca sử dụng, tiêu chí chấp nhận — trả lời "làm như thế nào, đo bằng gì".</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Phóng to bộ phận khác</div>
     <div class="xlinks">
-      <a class="xlink" href="states.html">khối động đọc từ <span class="n">Sheet 03 States</span></a>
-      <a class="xlink" href="tools.html">menu tool → <span class="n">Sheet 02 Tools</span></a>
-      <a class="xlink" href="index.html">về <span class="n">Sheet 00 Master</span></a>
+      <a class="xlink" href="index.html">Toàn cảnh</a>
+      <a class="xlink" href="tools.html">Tools</a>
+      <a class="xlink" href="states.html">States</a>
+      <a class="xlink" href="env.html">Env</a>
+      <a class="xlink" href="feedback.html">Feedback</a>
     </div>
   </section>
-
-  <div class="titleblock">
-    <div class="tb"><div class="k">Component</div><div class="v">Instructions — tĩnh + động</div></div>
-    <div class="tb"><div class="k">Sheet</div><div class="v s">01 / 05</div></div>
-    <div class="tb"><div class="k">Source</div><div class="v files">app/instructions/__init__.py<br>app/graphs/nodes.py:437</div></div>
-  </div>
-
-  <div class="pager">
-    <a href="index.html">← Sheet 00 · Master</a>
-    <a href="tools.html">Sheet 02 · Tools →</a>
-  </div>
   <div style="height:60px"></div>
 
 </div>
