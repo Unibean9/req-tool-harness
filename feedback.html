@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness Map · Sheet 05 — Feedback</title>
+<meta name="description" content="Vòng phản hồi của harness: critique judge, quality gate, readiness và impact ripple.">
+<link rel="stylesheet" href="harness.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><b>req-tool</b> · harness map</div>
+    <div class="sheet-tabs">
+      <a href="index.html"><span class="n">00</span> Sơ đồ tổng</a>
+      <a href="instructions.html"><span class="n">01</span> Instructions</a>
+      <a href="tools.html"><span class="n">02</span> Tools</a>
+      <a href="states.html"><span class="n">03</span> States</a>
+      <a href="env.html"><span class="n">04</span> Env</a>
+      <a href="feedback.html" class="is-active"><span class="n">05</span> Feedback</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="sheet-head">
+    <div class="eyebrow">Sheet 05 / 05 · Component callout — cạnh quay lại <b style="color:var(--ink-bright)">analyze</b></div>
+    <h1 class="sheet-title">Phản hồi là thứ<br><span class="accent">đóng vòng lặp</span> lại.</h1>
+    <p class="lead">Judge chấm draft, ghi <code style="font-family:var(--mono);color:var(--trace)">quality_report</code> vào state, rồi route quay lại <b>analyze</b> để sửa — hoặc mở khóa <code style="font-family:var(--mono);color:var(--trace)">finalize</code> khi qua gate. Đây là đoạn amber khép kín trên Sheet 00.</p>
+  </header>
+
+  <section class="section" style="padding-top:8px">
+    <div class="note signal">
+      <div class="nl">Hình dung thế nào</div>
+      <p>Đây là điểm khác biệt lớn nhất so với một chatbot thường: agent <b>tự chấm điểm bản nháp của chính mình</b> trước khi được phép chốt. Một con judge độc lập soi bản nháp theo từng tiêu chí (rõ ràng, đầy đủ, nhất quán, kiểm thử được…) và cho điểm 0–1.</p>
+      <p>Nếu chưa đạt ngưỡng, cổng <em>finalize</em> đóng và agent buộc quay lại sửa — đúng <b>đoạn amber khép kín</b> bạn thấy ở Sheet 00. Chính vòng phản hồi này là lý do agent không "bịa cho xong rồi nộp": muốn kết thúc thì phải qua kiểm định thật.</p>
+    </div>
+  </section>
+
+  <!-- FEEDBACK LOOP -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Vòng phản hồi</div>
+    <div class="panel ticks">
+      <div class="flow">
+        <span class="node">write_draft</span><span class="arr">→</span>
+        <span class="node s">run_critique</span><span class="arr">→</span>
+        <span class="node">quality_report → state</span><span class="arr">→</span>
+        <span class="node s">gate: pass?</span>
+        <span class="arr">→</span>
+        <span class="node">finalize · hoặc · revise → analyze</span>
+      </div>
+      <p class="p" style="margin-top:16px;margin-bottom:0"><code style="font-family:var(--mono);color:var(--trace)">finalize</code> bị chặn nếu <code style="font-family:var(--mono);color:var(--trace)">quality_gate_result != "pass"</code> hoặc thiếu report. <code style="font-family:var(--mono);color:var(--trace)">run_critique</code> bị chặn sau CRITIQUE_ROUNDS_MAX; ngưỡng <code style="font-family:var(--mono);color:var(--trace)">critique_score_threshold</code>.</p>
+    </div>
+  </section>
+
+  <!-- CRITIQUE MODES -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Judge — 9 critique mode · app/graphs/critique.py:16</div>
+    <div class="chips">
+      <span class="chip t">clarity</span><span class="chip t">completeness</span><span class="chip t">consistency</span><span class="chip t">feasibility</span><span class="chip t">testability</span><span class="chip t">traceability</span><span class="chip t">six_hats</span><span class="chip t">swot</span><span class="chip t">risk_review</span>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="kind">QualityReport</div>
+      <div class="desc"><code style="font-family:var(--mono);color:var(--trace)">mode</code> · <code style="font-family:var(--mono);color:var(--trace)">score</code> (0.0–1.0) · <code style="font-family:var(--mono);color:var(--trace)">findings</code> · <code style="font-family:var(--mono);color:var(--trace)">suggestions</code> · <code style="font-family:var(--mono);color:var(--trace)">blocking_issues</code> · <code style="font-family:var(--mono);color:var(--trace)">quality_gate_result</code> · <code style="font-family:var(--mono);color:var(--trace)">recommended_next_action</code> (finalize | revise | escalate).</div>
+    </div>
+  </section>
+
+  <!-- READINESS + CANDIDATE -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Readiness &amp; candidate state</div>
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="kind">run_readiness_check · readiness.py</div>
+        <div class="name">Đánh giá 10 chiều</div>
+        <div class="desc">Phủ section, không placeholder dở, không assumption treo, đủ predecessor, ngưỡng sub-dimension, stall, nhất quán đồ thị, link integrity, tiến độ chuỗi, xác nhận user.</div>
+      </div>
+      <div class="card">
+        <div class="kind">ArtifactCandidateReadiness · synthesis</div>
+        <div class="name">4 trạng thái draft</div>
+        <div class="chips" style="margin-top:10px">
+          <span class="chip d">POORLY_STRUCTURED</span>
+          <span class="chip d">WELL_STRUCTURED_BUT_INCOMPLETE</span>
+          <span class="chip s">NEEDS_CONFIRMATION</span>
+          <span class="chip t">SUFFICIENT</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT RIPPLE -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Impact ripple — phản hồi chéo artifact · decision_graph.py:349</div>
+    <div class="panel ticks">
+      <p class="p" style="margin:0"><code style="font-family:var(--mono);color:var(--trace)">run_impact_analysis</code> đánh dấu node bị ảnh hưởng bởi thay đổi chéo artifact thành <span class="chip s">needs_confirmation</span>. Bất biến: không viết lại statement, không chạm node superseded, duyệt artifact-link với visited-set guard. LLM tùy chọn chọn ID bị ảnh hưởng; nếu không có thì khớp token mặc định.</p>
+    </div>
+    <div class="xlinks">
+      <a class="xlink" href="states.html">ghi quality_report vào <span class="n">Sheet 03 States</span></a>
+      <a class="xlink" href="tools.html">run_critique là tool ở <span class="n">Sheet 02</span></a>
+      <a class="xlink" href="index.html">đoạn amber khép kín → <span class="n">Sheet 00 Master</span></a>
+    </div>
+  </section>
+
+  <div class="titleblock">
+    <div class="tb"><div class="k">Component</div><div class="v">Feedback — critique · gate · readiness</div></div>
+    <div class="tb"><div class="k">Sheet</div><div class="v s">05 / 05</div></div>
+    <div class="tb"><div class="k">Source</div><div class="v files">app/graphs/critique.py<br>app/graphs/readiness.py</div></div>
+  </div>
+
+  <div class="pager">
+    <a href="env.html">← Sheet 04 · Env</a>
+    <a href="index.html">Sheet 00 · Master ↺</a>
+  </div>
+  <div style="height:60px"></div>
+
+</div>
+</body>
+</html>

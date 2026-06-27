@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness Map · Sheet 02 — Tools</title>
+<meta name="description" content="Menu 28 tool state-gated của harness, dispatch qua native tool-calling.">
+<link rel="stylesheet" href="harness.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><b>req-tool</b> · harness map</div>
+    <div class="sheet-tabs">
+      <a href="index.html"><span class="n">00</span> Sơ đồ tổng</a>
+      <a href="instructions.html"><span class="n">01</span> Instructions</a>
+      <a href="tools.html" class="is-active"><span class="n">02</span> Tools</a>
+      <a href="states.html"><span class="n">03</span> States</a>
+      <a href="env.html"><span class="n">04</span> Env</a>
+      <a href="feedback.html"><span class="n">05</span> Feedback</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="sheet-head">
+    <div class="eyebrow">Sheet 02 / 05 · Component callout — node <b style="color:var(--ink-bright)">tools</b></div>
+    <h1 class="sheet-title">28 tool, nhưng<br>menu <span class="accent">tự khóa</span> theo state.</h1>
+    <p class="lead">LLM không thấy hết mọi tool mỗi lượt. <code style="font-family:var(--mono);color:var(--trace)">get_available_tools</code> lọc theo state, gọi qua <b>native tool-calling</b> (không shim), rồi <code style="font-family:var(--mono);color:var(--trace)">_gate_selected_tools</code> chặn lần nữa sau khi LLM chọn.</p>
+  </header>
+
+  <section class="section" style="padding-top:8px">
+    <div class="note">
+      <div class="nl">Hình dung thế nào</div>
+      <p>Nếu đưa cho LLM cả 28 công cụ ngay từ đầu, nó dễ "nhảy cóc" — viết bản nháp khi chưa hỏi đủ, hay chốt khi chưa kiểm định. Harness chống điều đó bằng cách <b>chỉ bày ra công cụ hợp lệ với tình huống hiện tại</b>.</p>
+      <p>Giống một <b>dây chuyền lắp ráp chỉ mở khóa nút bấm khi tới đúng công đoạn</b>: <em>write_draft</em> chỉ xuất hiện sau khi đã elicit đủ; <em>finalize</em> chỉ mở khi bản nháp đã qua cổng chất lượng. Có hai lớp khóa — lọc trước khi gọi LLM, và chặn lại sau khi LLM đã chọn — để model không thể "lách".</p>
+    </div>
+  </section>
+
+  <!-- DISPATCH FLOW -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Dispatch · app/graphs/nodes.py:437–458</div>
+    <div class="panel ticks">
+      <div class="flow">
+        <span class="node s">get_available_tools</span><span class="arr">→</span>
+        <span class="node">_build_tool_schemas</span><span class="arr">→</span>
+        <span class="node">LLM generate · tool_choice=auto</span><span class="arr">→</span>
+        <span class="node s">_gate_selected_tools</span><span class="arr">→</span>
+        <span class="node">ToolNode dispatch</span>
+      </div>
+      <p class="p" style="margin-top:16px;margin-bottom:0">Một số tool <b>interrupt</b> (ask_user, write_draft, finalize); số còn lại trả <code style="font-family:var(--mono);color:var(--trace)">ToolMessage</code> im lặng (notes, reads). Khi resume từ interrupt, thân tool chạy lại idempotent theo key.</p>
+    </div>
+  </section>
+
+  <!-- ALWAYS -->
+  <section class="section">
+    <div class="section-label"><span class="sn">G0</span> Luôn sẵn sàng</div>
+    <div class="grid cols-3">
+      <div class="card"><div class="name">ask_user</div><div class="desc">Hỏi làm rõ — pause interrupt.</div></div>
+      <div class="card"><div class="name">respond</div><div class="desc">Trình critique/analysis cho user; interrupt hoặc im lặng.</div></div>
+      <div class="card"><div class="name">write_draft</div><div class="desc">Đề xuất draft artifact — pause chờ duyệt.</div></div>
+      <div class="card"><div class="name">critique_note</div><div class="desc">Scratchpad critique im lặng.</div></div>
+      <div class="card"><div class="name">explore_note</div><div class="desc">Scratchpad khám phá im lặng.</div></div>
+      <div class="card"><div class="name">confirm_intent</div><div class="desc">Tóm tắt intent một lần — mở khóa pha artifact.</div></div>
+      <div class="card"><div class="name">read_artifact</div><div class="desc">Đọc body artifact anh em/tổ tiên (read-only).</div></div>
+      <div class="card"><div class="name">read_artifact_graph_tool</div><div class="desc">Đọc decision graph của artifact khác.</div></div>
+      <div class="card"><div class="name">create_artifact_link_tool</div><div class="desc">Nối 2 artifact (dependency/reference…).</div></div>
+      <div class="card"><div class="name">run_impact_analysis</div><div class="desc">Phân tích tác động chéo của một thay đổi.</div></div>
+      <div class="card"><div class="name">elicit_tool</div><div class="desc">Elicitation có cấu trúc (web search + synthesis).</div></div>
+      <div class="card"><div class="name">web_search_tool</div><div class="desc">Tìm web lấy ngữ cảnh.</div></div>
+      <div class="card"><div class="name">create_decision_node</div><div class="desc">Tạo node đồ thị quyết định (7 kind).</div></div>
+    </div>
+  </section>
+
+  <!-- GATED draft+critique -->
+  <section class="section">
+    <div class="section-label"><span class="sn">G1</span> Mở khi đã có draft + vòng critique</div>
+    <div class="grid cols-2">
+      <div class="card signal"><div class="name">update_decision_node</div><div class="desc">Patch node đang tồn tại (không lưu history).</div></div>
+      <div class="card signal"><div class="name">supersede_decision_node</div><div class="desc">Đảo ngược quyết định phi-hủy; ripple lan xuống dependent.</div></div>
+      <div class="card signal"><div class="name">run_critique</div><div class="desc">Chấm draft theo 1 critique mode; tối đa CRITIQUE_ROUNDS_MAX vòng.</div></div>
+      <div class="card signal"><div class="name">finalize</div><div class="desc">Đóng phiên — cần qua quality gate.</div></div>
+    </div>
+  </section>
+
+  <!-- GATED coverage -->
+  <section class="section">
+    <div class="section-label"><span class="sn">G2</span> Mở theo coverage</div>
+    <div class="grid cols-2">
+      <div class="card signal"><div class="name">recommend_next_workflow</div><div class="desc">Suy ra trạng thái chuỗi artifact — hàm thuần trên section_coverage.</div></div>
+      <div class="card signal"><div class="name">run_readiness_check</div><div class="desc">Đánh giá readiness 10 chiều.</div></div>
+    </div>
+    <div class="xlinks">
+      <a class="xlink" href="states.html">gate đọc từ <span class="n">Sheet 03 States</span></a>
+      <a class="xlink" href="feedback.html">run_critique → <span class="n">Sheet 05 Feedback</span></a>
+      <a class="xlink" href="env.html">tool adapter → <span class="n">Sheet 04 Env</span></a>
+    </div>
+  </section>
+
+  <div class="titleblock">
+    <div class="tb"><div class="k">Component</div><div class="v">Tools — menu state-gated</div></div>
+    <div class="tb"><div class="k">Sheet</div><div class="v s">02 / 05</div></div>
+    <div class="tb"><div class="k">Source</div><div class="v files">app/graphs/agent_tools.py:1717<br>app/graphs/nodes.py:450</div></div>
+  </div>
+
+  <div class="pager">
+    <a href="instructions.html">← Sheet 01 · Instructions</a>
+    <a href="states.html">Sheet 03 · States →</a>
+  </div>
+  <div style="height:60px"></div>
+
+</div>
+</body>
+</html>

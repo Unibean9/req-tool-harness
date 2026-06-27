@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness Map · Sheet 00 — Sơ đồ tổng</title>
+<meta name="description" content="Trực quan hóa harness của req-tool-be: vòng lặp đồ thị quyết định và 5 thành phần.">
+<link rel="stylesheet" href="harness.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><b>req-tool</b> · harness map</div>
+    <div class="sheet-tabs">
+      <a href="index.html" class="is-active"><span class="n">00</span> Sơ đồ tổng</a>
+      <a href="instructions.html"><span class="n">01</span> Instructions</a>
+      <a href="tools.html"><span class="n">02</span> Tools</a>
+      <a href="states.html"><span class="n">03</span> States</a>
+      <a href="env.html"><span class="n">04</span> Env</a>
+      <a href="feedback.html"><span class="n">05</span> Feedback</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="sheet-head">
+    <div class="eyebrow">Sheet 00 / 05 · Master diagram</div>
+    <h1 class="sheet-title">Một <span class="accent">vòng lặp</span><br>giữ cho agent đi đúng đường.</h1>
+    <p class="lead"><b>Harness</b> là phần khung cố định — đồ thị node, bộ điều phối tool, schema state — mà qua đó <b>chỉ dẫn, quyết định và phản hồi</b> chảy động theo từng lượt. Sơ đồ dưới đây là toàn cảnh; 5 sheet sau bóc tách từng thành phần.</p>
+  </header>
+
+  <!-- ============ KHÁI NIỆM: HARNESS LÀ GÌ ============ -->
+  <section class="section" style="padding-top:8px">
+    <div class="note">
+      <div class="nl">Harness là gì — và vì sao cần nó</div>
+      <p>Một LLM "trần" chỉ nhận câu hỏi, trả lời <em>một lần</em> rồi dừng. Nó không tự nhớ việc đang làm, không tự kiểm tra mình đúng hay sai, không tự dùng công cụ. Với một tài liệu yêu cầu phần mềm — nơi cần hỏi đi hỏi lại, tra cứu, chấm điểm và sửa nhiều vòng — như vậy là không đủ.</p>
+      <p><b>Harness</b> là bộ khung bao quanh model để biến một lần-gọi thành một <em>quy trình</em>: lặp nhiều lượt, gọi đúng công cụ vào đúng lúc, kiểm định chất lượng trước khi chốt, và giữ lại "sự thật" đã xác nhận giữa các lượt.</p>
+      <p>Ví von như <b>dây đai an toàn của người leo núi</b>: nó không leo thay bạn, nhưng giữ bạn trong giới hạn an toàn và cho bạn thử lại khi trượt chân. Ở đây harness giữ agent trong "luật chơi" — chỉ làm bước hợp lệ, luôn chấm điểm trước khi kết thúc, và không tự bịa.</p>
+    </div>
+  </section>
+
+  <!-- ============ HERO: SIGNAL-FLOW DIAGRAM ============ -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Đồ thị quyết định &amp; vòng lặp lượt-hội-thoại</div>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 920 500" role="img" aria-label="Sơ đồ luồng đồ thị harness gồm 6 node: triage, converse, orchestrator, analyze, tools, summarize">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#2A8C82"></path>
+          </marker>
+          <marker id="arrS" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#FF7A45"></path>
+          </marker>
+        </defs>
+
+        <!-- ===== static teal edges ===== -->
+        <path class="edge" d="M 110 81 L 110 121" marker-end="url(#arr)"></path>
+        <path class="edge" d="M 187 150 L 323 150" marker-end="url(#arr)"></path>
+        <text class="edge-label" x="210" y="143">work</text>
+        <path class="edge" d="M 110 177 L 110 271" marker-end="url(#arr)"></path>
+        <text class="edge-label" x="120" y="228">converse</text>
+        <path class="edge" stroke-dasharray="4 4" d="M 185 286 C 255 262 268 178 322 160" marker-end="url(#arr)"></path>
+        <text class="edge-label" x="196" y="210">resume</text>
+        <path class="edge" d="M 440 282 C 525 248 562 172 613 152" marker-end="url(#arr)"></path>
+        <text class="edge-label" x="500" y="208">END · no tool</text>
+        <path class="edge" stroke-dasharray="4 4" d="M 603 312 C 535 326 512 314 478 306" marker-end="url(#arr)"></path>
+        <text class="edge-label" x="498" y="345">route → analyze</text>
+
+        <!-- ===== hot amber loop ===== -->
+        <path class="edge-loop" d="M 400 177 L 400 271" marker-end="url(#arrS)"></path>
+        <path class="edge-loop" d="M 400 327 L 400 411" marker-end="url(#arrS)"></path>
+        <path class="edge-loop" d="M 477 440 C 582 440 680 400 680 329" marker-end="url(#arrS)"></path>
+        <path class="edge-loop" d="M 680 271 C 680 190 540 150 479 150" marker-end="url(#arrS)"></path>
+        <text class="edge-label" x="690" y="216" fill="#FF7A45">loop</text>
+
+        <!-- moving signal packet -->
+        <circle class="packet packet-path" r="5"></circle>
+
+        <!-- ===== IO pills ===== -->
+        <rect class="n-rect io" x="50" y="47" width="120" height="34" rx="17"></rect>
+        <text class="io-label" x="110" y="69" text-anchor="middle">INPUT</text>
+        <rect class="n-rect io" x="615" y="133" width="130" height="34" rx="17"></rect>
+        <text class="io-label" x="680" y="155" text-anchor="middle">INTERRUPT</text>
+
+        <!-- ===== nodes ===== -->
+        <!-- triage -->
+        <rect class="n-rect" x="37" y="123" width="146" height="54" rx="4"></rect>
+        <text class="n-label" x="110" y="146" text-anchor="middle">triage</text>
+        <text class="n-sub" x="110" y="164" text-anchor="middle">classify · locale</text>
+        <!-- converse -->
+        <rect class="n-rect" x="37" y="273" width="146" height="54" rx="4"></rect>
+        <text class="n-label" x="110" y="296" text-anchor="middle">converse</text>
+        <text class="n-sub" x="110" y="314" text-anchor="middle">reply · pause</text>
+        <!-- orchestrator -->
+        <rect class="n-rect" x="327" y="123" width="146" height="54" rx="4"></rect>
+        <text class="n-label" x="400" y="146" text-anchor="middle">orchestrator</text>
+        <text class="n-sub" x="400" y="164" text-anchor="middle">pre-analyze route</text>
+        <!-- analyze -->
+        <rect class="n-rect" x="327" y="273" width="146" height="54" rx="4" stroke="#FF7A45"></rect>
+        <text class="n-label" x="400" y="296" text-anchor="middle" fill="#FF7A45">analyze</text>
+        <text class="n-sub" x="400" y="314" text-anchor="middle">assemble · pick tool</text>
+        <!-- tools -->
+        <rect class="n-rect" x="327" y="413" width="146" height="54" rx="4" stroke="#FF7A45"></rect>
+        <text class="n-label" x="400" y="436" text-anchor="middle" fill="#FF7A45">tools</text>
+        <text class="n-sub" x="400" y="454" text-anchor="middle">ToolNode · dispatch</text>
+        <!-- summarize -->
+        <rect class="n-rect" x="607" y="273" width="146" height="54" rx="4"></rect>
+        <text class="n-label" x="680" y="296" text-anchor="middle">summarize</text>
+        <text class="n-sub" x="680" y="314" text-anchor="middle">compress thread</text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <span class="li"><span class="sw"></span> Cạnh tĩnh — chuyển trạng thái cố định</span>
+      <span class="li"><span class="sw loop"></span> Vòng lặp sống — <b style="color:var(--signal)">orchestrator → analyze ⇄ tools → route</b></span>
+      <span class="li">● Gói tín hiệu = một lượt agent đang chạy</span>
+    </div>
+  </section>
+
+  <!-- ============ TURN LIFECYCLE ============ -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Vòng đời một lượt</div>
+    <div class="panel ticks">
+      <div class="flow">
+        <span class="node">INPUT</span><span class="arr">→</span>
+        <span class="node">triage</span><span class="arr">→</span>
+        <span class="node">converse | orchestrator</span><span class="arr">→</span>
+        <span class="node s">analyze</span><span class="arr">→</span>
+        <span class="node s">tools</span><span class="arr">→</span>
+        <span class="node">route_before_analyze</span><span class="arr">→</span>
+        <span class="node">summarize / analyze</span><span class="arr">→</span>
+        <span class="node">INTERRUPT</span>
+      </div>
+      <p class="p" style="margin-top:18px;margin-bottom:0">Lượt kết thúc bằng một <b>interrupt</b> — <span class="chip d">ASK_HUMAN</span> <span class="chip d">STREAM_RESPONSE</span> <span class="chip d">PROPOSE_ARTIFACTS</span> <span class="chip d">finalize</span> — chờ người dùng. Resume mang câu trả lời quay lại <b>analyze</b>, đóng vòng lặp. Mỗi <code style="font-family:var(--mono);color:var(--trace)">summary_trigger_every</code> lượt, <b>summarize</b> nén hội thoại (bỏ qua <code style="font-family:var(--mono);color:var(--trace)">key_facts</code>).</p>
+    </div>
+  </section>
+
+  <!-- ============ 5 COMPONENT MAP ============ -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> 5 thành phần của harness — bóc tách theo sheet</div>
+    <div class="note" style="margin-bottom:22px">
+      <div class="nl">Cách đọc bộ bản vẽ này</div>
+      <p>Sheet 00 (trang này) là <b>toàn cảnh</b>. Năm sheet sau mỗi cái <b>phóng to một bộ phận</b> của cùng cái máy đó. Quy ước màu giữ nguyên xuyên suốt: <em>teal = phần khung cố định</em>, <em>amber = phần chảy động</em> (vòng lặp, tín hiệu, phản hồi). Mỗi ô node trên sơ đồ phía trên ứng trực tiếp với một sheet bên dưới.</p>
+    </div>
+    <div class="map-grid">
+      <a class="map-card" href="instructions.html">
+        <span class="mn">SHEET 01</span>
+        <span class="mt">Instructions</span>
+        <span class="md">Stack 4 lớp tĩnh + khối inject động/lượt. Node: <b>analyze</b>.</span>
+      </a>
+      <a class="map-card" href="tools.html">
+        <span class="mn">SHEET 02</span>
+        <span class="mt">Tools</span>
+        <span class="md">28 tool state-gated, native tool-calling. Node: <b>tools</b>.</span>
+      </a>
+      <a class="map-card" href="states.html">
+        <span class="mn">SHEET 03</span>
+        <span class="mt">States</span>
+        <span class="md">WorkflowState + DecisionNode — nguồn sự thật. Chảy qua mọi node.</span>
+      </a>
+      <a class="map-card" href="env.html">
+        <span class="mn">SHEET 04</span>
+        <span class="mt">Env</span>
+        <span class="md">6 node đồ thị, 4 LLM client, persistence, registry. Là cái khung.</span>
+      </a>
+      <a class="map-card" href="feedback.html">
+        <span class="mn">SHEET 05</span>
+        <span class="mt">Feedback</span>
+        <span class="md">Critique · gate · readiness · impact ripple. Cạnh quay lại loop.</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ MAPPING NOTE ============ -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Ánh xạ thành phần → node</div>
+    <div class="grid cols-2">
+      <div class="card signal">
+        <div class="kind">node analyze</div>
+        <div class="name">Instructions + Tools hội tụ</div>
+        <div class="desc">Tại <b>analyze</b>, harness ráp prompt 4 lớp (Sheet 01), chọn tool đủ điều kiện (Sheet 02) rồi gọi LLM. Đây là nơi phần "động" của instructions được bơm vào.</div>
+      </div>
+      <div class="card signal">
+        <div class="kind">node tools</div>
+        <div class="name">Feedback bơm trở lại States</div>
+        <div class="desc"><b>run_critique</b> / <b>run_readiness_check</b> (Sheet 05) chạy trong <b>tools</b>, ghi <code style="font-family:var(--mono);color:var(--trace)">quality_report</code> vào State (Sheet 03), rồi route quay lại analyze để sửa.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TITLE BLOCK ============ -->
+  <div class="titleblock">
+    <div class="tb">
+      <div class="k">Drawing</div>
+      <div class="v">Harness — bản đồ kiến trúc</div>
+    </div>
+    <div class="tb">
+      <div class="k">Sheet</div>
+      <div class="v s">00 / 05 · Master</div>
+    </div>
+    <div class="tb">
+      <div class="k">Source</div>
+      <div class="v files">app/graphs/graph.py<br>app/graphs/nodes.py</div>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="dis">— hết đầu —</a>
+    <a href="instructions.html">Sheet 01 · Instructions →</a>
+  </div>
+  <div style="height:60px"></div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,551 @@
+/* ============================================================
+   HARNESS MAP — design system dùng chung cho 6 sheet
+   Hướng: "bản vẽ tín hiệu sống" (control-system schematic)
+   Lạnh = khung scaffold cố định · Nóng = tín hiệu chảy động
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* --- palette: indigo-void + teal scaffold + amber signal --- */
+  --void:        #0B0F1A;
+  --void-2:      #0E1320;
+  --sheet:       #121829;
+  --sheet-2:     #161E33;
+  --grid:        #1E2740;
+  --grid-soft:   #19203450;
+
+  --trace:       #3DD6C4;   /* dây nối tĩnh / khung */
+  --trace-dim:   #2A8C82;
+  --signal:      #FF7A45;   /* tín hiệu sống / loop / feedback */
+  --signal-2:    #FFB088;
+  --signal-glow: #FF7A4533;
+
+  --ink:         #C9D4E8;
+  --ink-bright:  #EEF3FA;
+  --ink-dim:     #6B7A99;
+  --ink-faint:   #45506B;
+
+  /* --- type --- */
+  --display: 'Space Grotesk', system-ui, sans-serif;
+  --body:    'IBM Plex Sans', system-ui, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --maxw: 1160px;
+  --radius: 4px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 700px at 70% -5%, #16203a 0%, transparent 55%),
+    var(--void);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.005em;
+}
+
+/* faint engineering grid behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-soft) 1px, transparent 1px);
+  background-size: 46px 46px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 80%);
+}
+
+.wrap { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+/* ============================================================
+   SHEET INDEX NAV — dải chỉ mục bản vẽ
+   ============================================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: linear-gradient(180deg, var(--void) 60%, transparent);
+  border-bottom: 1px solid var(--grid);
+  backdrop-filter: blur(8px);
+}
+.nav-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.nav-brand {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--trace);
+  white-space: nowrap;
+}
+.nav-brand b { color: var(--ink-bright); font-weight: 600; }
+.sheet-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+.sheet-tabs a {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.sheet-tabs a .n { color: var(--ink-faint); }
+.sheet-tabs a:hover { color: var(--ink-bright); border-color: var(--grid); }
+.sheet-tabs a.is-active {
+  color: var(--signal);
+  border-color: var(--signal);
+  background: var(--signal-glow);
+}
+.sheet-tabs a.is-active .n { color: var(--signal-2); }
+
+/* ============================================================
+   SHEET HEADER — eyebrow + title + lead
+   ============================================================ */
+.sheet-head { padding: 70px 0 34px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--trace);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: "";
+  width: 34px; height: 1px;
+  background: var(--trace);
+  display: inline-block;
+}
+.sheet-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--ink-bright);
+  margin: 20px 0 0;
+}
+.sheet-title .accent { color: var(--signal); }
+.lead {
+  max-width: 60ch;
+  font-size: 1.12rem;
+  color: var(--ink);
+  margin: 22px 0 0;
+}
+.lead b { color: var(--ink-bright); font-weight: 600; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section { padding: 30px 0; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-top: 1px solid var(--grid);
+  padding-top: 14px;
+  margin: 0 0 24px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+.section-label .sn { color: var(--signal); font-weight: 600; }
+.h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: -0.02em;
+  color: var(--ink-bright);
+  margin: 0 0 6px;
+}
+.p { max-width: 64ch; margin: 0 0 18px; }
+.p b { color: var(--ink-bright); font-weight: 600; }
+
+/* ============================================================
+   PANEL / NODE CARD — khối schematic
+   ============================================================ */
+.panel {
+  background: linear-gradient(180deg, var(--sheet) 0%, var(--void-2) 100%);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  position: relative;
+}
+/* corner tick marks — vernacular bản vẽ kỹ thuật */
+.panel.ticks::before,
+.panel.ticks::after {
+  content: "";
+  position: absolute;
+  width: 9px; height: 9px;
+  border-color: var(--trace-dim);
+  border-style: solid;
+}
+.panel.ticks::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.panel.ticks::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+.grid { display: grid; gap: 16px; }
+.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.card {
+  background: var(--sheet);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: 18px 18px 16px;
+  transition: border-color .18s, transform .18s;
+}
+.card:hover { border-color: var(--trace-dim); }
+.card.signal { border-left: 2px solid var(--signal); }
+.card .kind {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 9px;
+}
+.card .name {
+  font-family: var(--mono);
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--trace);
+  margin-bottom: 7px;
+  word-break: break-word;
+}
+.card.signal .name { color: var(--signal); }
+.card .desc { font-size: 0.9rem; color: var(--ink); line-height: 1.5; }
+
+/* numbered marker — chỉ dùng nơi thứ tự CÓ nghĩa (layer stack, lifecycle) */
+.step-n {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--signal);
+  border: 1px solid var(--signal);
+  border-radius: 2px;
+  padding: 1px 6px;
+  flex: none;
+}
+
+/* ============================================================
+   NOTE — chú giải mang tính giáo dục
+   ============================================================ */
+.note {
+  border: 1px solid var(--grid);
+  border-left: 2px solid var(--trace);
+  background: linear-gradient(180deg, #101a2e 0%, #0d1320 100%);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 0 0 22px;
+  max-width: 78ch;
+}
+.note .nl {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--trace);
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.note .nl::before { content: "✦"; color: var(--trace-dim); }
+.note p { margin: 0 0 11px; color: var(--ink); }
+.note p:last-child { margin-bottom: 0; }
+.note b { color: var(--ink-bright); font-weight: 600; }
+.note em { color: var(--signal-2); font-style: normal; }
+.note.signal { border-left-color: var(--signal); }
+.note.signal .nl { color: var(--signal); }
+.note.signal .nl::before { color: var(--signal); }
+
+/* ============================================================
+   CHIPS / BADGES — tên tool, status, field
+   ============================================================ */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  background: var(--void-2);
+  border: 1px solid var(--grid);
+  border-radius: 2px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.chip.t { color: var(--trace); border-color: var(--trace-dim); }
+.chip.s { color: var(--signal); border-color: var(--signal); background: var(--signal-glow); }
+.chip.d { color: var(--ink-dim); }
+
+/* ============================================================
+   STACK (layer instructions) — xếp chồng dọc
+   ============================================================ */
+.stack { display: flex; flex-direction: column; gap: 0; }
+.stack-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  border: 1px solid var(--grid);
+  border-bottom: none;
+  background: var(--sheet);
+}
+.stack-item:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.stack-item:last-child { border-bottom: 1px solid var(--grid); border-radius: 0 0 var(--radius) var(--radius); }
+.stack-item.dyn { border-left: 2px solid var(--signal); }
+.stack-item.stat { border-left: 2px solid var(--trace); }
+.stack-item .body { flex: 1; }
+.stack-item .ti {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--ink-bright);
+  font-size: 0.95rem;
+}
+.stack-item .sub { font-size: 0.88rem; color: var(--ink-dim); margin-top: 4px; }
+
+/* ============================================================
+   DATA TABLE — state fields, schema
+   ============================================================ */
+.tbl-scroll { overflow-x: auto; border: 1px solid var(--grid); border-radius: var(--radius); }
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 520px;
+}
+table.data th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 11px 16px;
+  background: var(--void-2);
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+table.data td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--grid);
+  vertical-align: top;
+  color: var(--ink);
+}
+table.data tr:last-child td { border-bottom: none; }
+table.data tr:hover td { background: #ffffff05; }
+table.data .f { font-family: var(--mono); color: var(--trace); white-space: nowrap; }
+table.data .f.s { color: var(--signal); }
+
+/* ============================================================
+   FLOW (lifecycle pills connected by arrows)
+   ============================================================ */
+.flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+}
+.flow .node {
+  border: 1px solid var(--trace-dim);
+  color: var(--trace);
+  padding: 7px 12px;
+  border-radius: 2px;
+  background: var(--void-2);
+}
+.flow .node.s { border-color: var(--signal); color: var(--signal); background: var(--signal-glow); }
+.flow .arr { color: var(--ink-faint); padding: 0 9px; }
+
+/* ============================================================
+   CROSSLINK — "see sheet NN"
+   ============================================================ */
+.xlinks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.xlink {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-decoration: none;
+  color: var(--ink-dim);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: 8px 13px;
+  display: inline-flex;
+  gap: 9px;
+  align-items: baseline;
+  transition: border-color .15s, color .15s;
+}
+.xlink:hover { color: var(--signal); border-color: var(--signal); }
+.xlink .n { color: var(--ink-faint); }
+.xlink:hover .n { color: var(--signal-2); }
+
+/* ============================================================
+   TITLE BLOCK — góc bản vẽ kỹ thuật
+   ============================================================ */
+.titleblock {
+  margin: 60px 0 50px;
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background: var(--sheet);
+  overflow: hidden;
+}
+.titleblock .tb {
+  padding: 14px 18px;
+  border-right: 1px solid var(--grid);
+}
+.titleblock .tb:last-child { border-right: none; }
+.titleblock .k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 5px;
+}
+.titleblock .v {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  color: var(--ink-bright);
+}
+.titleblock .v.s { color: var(--signal); }
+.titleblock .files { color: var(--trace); font-size: 0.82rem; line-height: 1.7; }
+
+/* ============================================================
+   HERO SVG (master diagram) wrapper
+   ============================================================ */
+.diagram-wrap {
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(700px 400px at 50% 40%, #141d33 0%, transparent 70%),
+    var(--void-2);
+  padding: 8px;
+  overflow-x: auto;
+}
+.diagram-wrap svg { width: 100%; height: auto; display: block; min-width: 680px; }
+
+/* node styling inside svg */
+.n-rect { fill: var(--sheet-2); stroke: var(--trace-dim); stroke-width: 1.2; }
+.n-rect.io { fill: var(--void); stroke: var(--ink-faint); }
+.n-label { font-family: var(--mono); font-size: 15px; fill: var(--trace); font-weight: 600; }
+.n-sub   { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-dim); letter-spacing: 0.08em; }
+.io-label { font-family: var(--mono); font-size: 12px; fill: var(--ink-dim); letter-spacing: 0.12em; }
+.edge { fill: none; stroke: var(--trace-dim); stroke-width: 1.4; }
+.edge-label { font-family: var(--mono); font-size: 11px; fill: var(--ink-dim); }
+.edge-loop {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 1.8;
+  stroke-dasharray: 7 7;
+  animation: flow 1.1s linear infinite;
+}
+@keyframes flow { to { stroke-dashoffset: -28; } }
+
+.packet { fill: var(--signal); filter: drop-shadow(0 0 6px var(--signal)); }
+.packet-path {
+  offset-path: path("M 400 177 L 400 440 C 540 440 680 400 680 300 C 680 200 540 150 400 150");
+  animation: ride 4s linear infinite;
+}
+@keyframes ride { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+/* legend */
+.legend { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; font-family: var(--mono); font-size: 0.8rem; color: var(--ink-dim); }
+.legend .li { display: flex; align-items: center; gap: 9px; }
+.legend .sw { width: 22px; height: 0; border-top: 2px solid var(--trace-dim); }
+.legend .sw.loop { border-top: 2px dashed var(--signal); }
+
+/* ============================================================
+   COMPONENT MAP (sheet 00 -> 5 components)
+   ============================================================ */
+.map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.map-card {
+  text-decoration: none;
+  background: var(--sheet);
+  border: 1px solid var(--grid);
+  border-top: 2px solid var(--trace-dim);
+  border-radius: var(--radius);
+  padding: 18px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform .18s, border-color .18s, background .18s;
+}
+.map-card:hover { transform: translateY(-3px); border-top-color: var(--signal); background: var(--sheet-2); }
+.map-card .mn { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.1em; }
+.map-card .mt { font-family: var(--display); font-weight: 600; font-size: 1.15rem; color: var(--ink-bright); }
+.map-card .md { font-size: 0.85rem; color: var(--ink-dim); }
+.map-card:hover .mt { color: var(--signal); }
+
+/* ============================================================
+   pagination foot (prev / next sheet)
+   ============================================================ */
+.pager { display: flex; justify-content: space-between; gap: 16px; margin: 10px 0 0; flex-wrap: wrap; }
+.pager a {
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  transition: color .15s, border-color .15s;
+}
+.pager a:hover { color: var(--signal); border-color: var(--signal); }
+.pager .dis { opacity: 0.3; pointer-events: none; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 880px) {
+  .cols-2, .cols-3, .cols-4 { grid-template-columns: 1fr; }
+  .map-grid { grid-template-columns: repeat(2, 1fr); }
+  .titleblock { grid-template-columns: 1fr; }
+  .titleblock .tb { border-right: none; border-bottom: 1px solid var(--grid); }
+  .titleblock .tb:last-child { border-bottom: none; }
+}
+@media (max-width: 520px) {
+  .map-grid { grid-template-columns: 1fr; }
+  .wrap, .nav-inner { padding-left: 18px; padding-right: 18px; }
+}
+
+/* keyboard focus floor */
+a:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* reduced motion floor */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; scroll-behavior: auto !important; }
+  .edge-loop { stroke-dashoffset: 0; }
+  .packet-path { offset-distance: 35%; }
+}
