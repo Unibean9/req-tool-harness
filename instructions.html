@@ -35,7 +35,7 @@
 <div class="wrap">
 
   <header class="sheet-head">
-    <div class="eyebrow">Tại trạm suy nghĩ</div>
+    <div class="eyebrow">Tại node analyze</div>
     <h1 class="sheet-title">Lời dặn được<br><span class="accent">ráp lại</span> mỗi lượt.</h1>
     <p class="lead">Trước khi agent quyết định làm gì, nó đọc một bộ lời dặn. Một phần là cố định — luật chơi không đổi. Một phần được thêm tươi mỗi lượt, tùy theo tình huống lúc đó. Cùng một bộ luật, nhưng hành vi đổi theo ngữ cảnh.</p>
   </header>
@@ -45,6 +45,38 @@
       <div class="nl">Hình dung thế nào</div>
       <p>Hãy tưởng tượng mỗi lượt như một <b>cuộc họp ngắn</b>. Phần <em>cố định</em> là nội quy dán sẵn trên tường — không đổi giữa các cuộc họp: vai trò của bạn là gì, được phép làm gì, kết quả phải đạt chuẩn nào.</p>
       <p>Phần <em>tươi</em> là tờ ghi chú dán thêm cho riêng cuộc họp này: bản nháp đang ra sao, mục nào còn thiếu, những điều đã chốt. Agent đọc cả hai trước khi quyết định bước tiếp theo.</p>
+    </div>
+  </section>
+
+  <!-- L3 DIAGRAM -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Prompt được ráp ra sao</div>
+    <div style="margin-bottom:14px"><span class="lvl"><span class="ln">Mức 3</span> Chi tiết · instructions</span></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 920 320" role="img" aria-label="Sơ đồ ráp prompt từ lớp tĩnh và khối động vào analyze">
+        <defs><marker id="ia" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2A8C82"></path></marker></defs>
+        <rect class="c4-band" x="40" y="48" width="256" height="112" rx="5"></rect>
+        <text class="c4-ts" x="52" y="40" font-size="11">TĨNH · 4 lớp cố định</text>
+        <text x="60" y="78" font-size="12" fill="#3DD6C4" font-family="var(--mono)">— luật nền</text>
+        <text x="60" y="100" font-size="12" fill="#3DD6C4" font-family="var(--mono)">— vai trò (BA / PM)</text>
+        <text x="60" y="122" font-size="12" fill="#3DD6C4" font-family="var(--mono)">— danh mục tools</text>
+        <text x="60" y="144" font-size="12" fill="#3DD6C4" font-family="var(--mono)">— chuẩn output</text>
+        <rect class="c4-band" x="40" y="184" width="256" height="116" rx="5" stroke="#FF7A45"></rect>
+        <text class="c4-th" x="52" y="176" font-size="11">TƯƠI · bơm theo lượt</text>
+        <text x="60" y="212" font-size="12" fill="#FFB088" font-family="var(--mono)">— tài liệu cần phần nào</text>
+        <text x="60" y="232" font-size="12" fill="#FFB088" font-family="var(--mono)">— gợi ý chọn việc</text>
+        <text x="60" y="252" font-size="12" fill="#FFB088" font-family="var(--mono)">— bản nháp hiện tại</text>
+        <text x="60" y="272" font-size="12" fill="#FFB088" font-family="var(--mono)">— điều đã chốt</text>
+        <text x="60" y="292" font-size="12" fill="#FFB088" font-family="var(--mono)">— đồ thị quyết định</text>
+        <rect class="c4-box" x="430" y="128" width="160" height="78" rx="5"></rect>
+        <text class="c4-t" x="510" y="162" text-anchor="middle" font-size="13.5">prompt</text>
+        <text class="c4-cap" x="510" y="182" text-anchor="middle" font-size="10.5">cho lượt này</text>
+        <rect class="c4-focus" x="710" y="137" width="150" height="60" rx="5"></rect>
+        <text class="c4-th" x="785" y="172" text-anchor="middle" font-size="15">analyze</text>
+        <path class="c4-edge" d="M 296 104 C 360 116 380 150 428 154" marker-end="url(#ia)"></path>
+        <path class="c4-edge hot" d="M 296 240 C 360 220 380 184 428 180" marker-end="url(#ia)"></path>
+        <path class="c4-edge" d="M 590 167 L 706 167" marker-end="url(#ia)"></path>
+      </svg>
     </div>
   </section>
 

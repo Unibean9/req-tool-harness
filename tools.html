@@ -35,7 +35,7 @@
 <div class="wrap">
 
   <header class="sheet-head">
-    <div class="eyebrow">Tại trạm hành động</div>
+    <div class="eyebrow">Tại node tools</div>
     <h1 class="sheet-title">Nhiều việc làm được,<br>nhưng menu <span class="accent">tự khóa</span>.</h1>
     <p class="lead">Agent có khoảng hơn hai chục việc nó biết làm. Nhưng mỗi lượt nó không được thấy hết — chỉ những việc hợp lệ với tình huống lúc đó mới hiện ra để chọn.</p>
   </header>
@@ -45,6 +45,36 @@
       <div class="nl">Hình dung thế nào</div>
       <p>Nếu bày ra tất cả ngay từ đầu, agent dễ "nhảy cóc" — viết bản nháp khi chưa hỏi đủ, hay tuyên bố hoàn tất khi chưa kiểm tra. Harness chống điều đó bằng cách <b>chỉ mở những việc hợp lệ với lúc này</b>.</p>
       <p>Giống một <b>dây chuyền chỉ sáng đèn nút bấm khi tới đúng công đoạn</b>: việc soạn bản nháp chỉ mở sau khi đã thu thập đủ; việc chốt chỉ mở khi bản nháp đã qua cửa chất lượng. Có hai lớp khóa — lọc trước khi agent chọn, và chặn lại sau khi nó đã chọn — nên không thể lách.</p>
+    </div>
+  </section>
+
+  <!-- L3 DIAGRAM -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Cơ chế khóa &amp; dispatch</div>
+    <div style="margin-bottom:14px"><span class="lvl"><span class="ln">Mức 3</span> Chi tiết · tools</span></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 920 270" role="img" aria-label="Đường ống lọc tool theo state, LLM chọn, gate, rồi dispatch">
+        <defs><marker id="to" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2A8C82"></path></marker></defs>
+        <rect class="c4-box" x="34" y="100" width="120" height="60" rx="5"></rect>
+        <text class="c4-t" x="94" y="126" text-anchor="middle" font-size="13">~28 tools</text>
+        <text class="c4-cap" x="94" y="144" text-anchor="middle" font-size="10">tất cả</text>
+        <rect class="c4-box hot" x="270" y="100" width="140" height="60" rx="5"></rect>
+        <text class="c4-th" x="340" y="126" text-anchor="middle" font-size="13">tools hợp lệ</text>
+        <text class="c4-cap" x="340" y="144" text-anchor="middle" font-size="10">theo state lúc này</text>
+        <rect class="c4-box" x="520" y="100" width="130" height="60" rx="5"></rect>
+        <text class="c4-t" x="585" y="126" text-anchor="middle" font-size="13">dispatch</text>
+        <text class="c4-cap" x="585" y="144" text-anchor="middle" font-size="10">ToolNode</text>
+        <rect class="c4-box" x="760" y="54" width="130" height="50" rx="5"></rect>
+        <text class="c4-t" x="825" y="84" text-anchor="middle" font-size="12.5">interrupt</text>
+        <rect class="c4-box" x="760" y="156" width="130" height="50" rx="5"></rect>
+        <text class="c4-t" x="825" y="186" text-anchor="middle" font-size="12.5">im lặng</text>
+        <path class="c4-edge" d="M 154 130 L 266 130" marker-end="url(#to)"></path>
+        <text class="c4-elabel" x="166" y="122" font-size="10">lọc state</text>
+        <path class="c4-edge" d="M 410 130 L 516 130" marker-end="url(#to)"></path>
+        <text class="c4-elabel" x="418" y="122" font-size="10">LLM chọn · gate</text>
+        <path class="c4-edge" d="M 650 122 C 710 110 720 90 756 82" marker-end="url(#to)"></path>
+        <path class="c4-edge" d="M 650 138 C 710 150 720 170 756 178" marker-end="url(#to)"></path>
+      </svg>
     </div>
   </section>
 

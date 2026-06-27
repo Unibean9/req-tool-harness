@@ -35,7 +35,7 @@
 <div class="wrap">
 
   <header class="sheet-head">
-    <div class="eyebrow">Đoạn nóng quay lại trạm suy nghĩ</div>
+    <div class="eyebrow">Đoạn nóng quay lại node analyze</div>
     <h1 class="sheet-title">Phản hồi là thứ<br><span class="accent">đóng vòng lặp</span> lại.</h1>
     <p class="lead">Đây là điều tách agent này khỏi một chatbot thường: trước khi được phép tuyên bố hoàn tất, nó phải tự chấm điểm bản nháp của chính mình — và nếu chưa đạt thì quay lại sửa.</p>
   </header>
@@ -45,6 +45,38 @@
       <div class="nl">Hình dung thế nào</div>
       <p>Một người soát độc lập đọc bản nháp theo từng tiêu chí và cho điểm. Nếu đạt ngưỡng, cánh cửa "chốt" mở ra. Nếu chưa, cửa đóng và agent buộc quay lại sửa.</p>
       <p>Chính vòng này là <b>đoạn nóng khép kín</b> bạn thấy ở trang Toàn cảnh — lý do agent không thể "viết bừa cho xong rồi nộp": muốn kết thúc thì phải qua kiểm định thật.</p>
+    </div>
+  </section>
+
+  <!-- L3 DIAGRAM -->
+  <section class="section">
+    <div class="section-label"><span class="sn">◢</span> Vòng tự chấm điểm</div>
+    <div style="margin-bottom:14px"><span class="lvl"><span class="ln">Mức 3</span> Chi tiết · feedback</span></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 920 290" role="img" aria-label="Bản nháp qua judge, chấm điểm, cổng đạt ngưỡng, finalize hoặc quay lại analyze">
+        <defs>
+          <marker id="fb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2A8C82"></path></marker>
+          <marker id="fbs" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#FF7A45"></path></marker>
+        </defs>
+        <rect class="c4-box" x="34" y="110" width="120" height="56" rx="5"></rect>
+        <text class="c4-t" x="94" y="142" text-anchor="middle" font-size="13">bản nháp</text>
+        <rect class="c4-box hot" x="220" y="100" width="150" height="76" rx="5"></rect>
+        <text class="c4-th" x="295" y="130" text-anchor="middle" font-size="13.5">judge</text>
+        <text class="c4-cap" x="295" y="150" text-anchor="middle" font-size="10">9 góc chấm · điểm 0–1</text>
+        <rect class="c4-box" x="440" y="110" width="140" height="56" rx="5"></rect>
+        <text class="c4-t" x="510" y="135" text-anchor="middle" font-size="12.5">đạt ngưỡng?</text>
+        <text class="c4-cap" x="510" y="153" text-anchor="middle" font-size="10">quality gate</text>
+        <rect class="c4-box" x="660" y="44" width="170" height="52" rx="5"></rect>
+        <text class="c4-t" x="745" y="74" text-anchor="middle" font-size="12.5">finalize</text>
+        <rect class="c4-focus" x="660" y="180" width="170" height="52" rx="5"></rect>
+        <text class="c4-th" x="745" y="210" text-anchor="middle" font-size="12.5">quay lại analyze</text>
+        <path class="c4-edge" d="M 154 138 L 216 138" marker-end="url(#fb)"></path>
+        <path class="c4-edge" d="M 370 138 L 436 138" marker-end="url(#fb)"></path>
+        <path class="c4-edge" d="M 580 128 C 630 110 640 86 656 76" marker-end="url(#fb)"></path>
+        <text class="c4-elabel" x="600" y="104" font-size="10" fill="#3DD6C4">đạt</text>
+        <path class="c4-edge hot" d="M 580 150 C 630 172 640 196 656 204" marker-end="url(#fbs)"></path>
+        <text class="c4-elabel" x="588" y="192" font-size="10" fill="#FF7A45">chưa</text>
+      </svg>
     </div>
   </section>
 

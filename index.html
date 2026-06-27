@@ -83,10 +83,61 @@
         </div>
       </section>
 
+      <!-- L1 CONTEXT -->
+      <section class="section">
+        <div class="section-label">
+          <span class="sn">◢</span> Bối cảnh — hệ thống nằm ở đâu
+        </div>
+        <div style="margin-bottom: 14px">
+          <span class="lvl t"><span class="ln">Mức 1</span> Context</span>
+        </div>
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 920 280" role="img" aria-label="Sơ đồ bối cảnh: Analyst dùng harness, harness gọi LLM và đọc ghi database">
+            <defs>
+              <marker id="ca" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto-start-reverse">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#2A8C82"></path>
+              </marker>
+            </defs>
+            <!-- edges -->
+            <path class="c4-edge" d="M 214 132 L 356 132" marker-start="url(#ca)" marker-end="url(#ca)"></path>
+            <text class="c4-elabel" x="232" y="124" font-size="11">hỏi · trả lời</text>
+            <path class="c4-edge" d="M 572 110 L 716 80" marker-end="url(#ca)"></path>
+            <text class="c4-elabel" x="592" y="86" font-size="11">gọi model</text>
+            <path class="c4-edge" d="M 572 156 L 716 202" marker-end="url(#ca)"></path>
+            <text class="c4-elabel" x="592" y="194" font-size="11">lưu · đọc</text>
+
+            <!-- actor -->
+            <rect class="c4-actor" x="44" y="96" width="170" height="72" rx="6"></rect>
+            <text class="c4-ts" x="129" y="128" text-anchor="middle" font-size="15">Analyst</text>
+            <text class="c4-cap" x="129" y="148" text-anchor="middle" font-size="10.5">người phân tích · PM</text>
+
+            <!-- system in scope -->
+            <rect class="c4-focus" x="356" y="78" width="216" height="108" rx="6"></rect>
+            <text class="c4-th" x="464" y="120" text-anchor="middle" font-size="16">req-tool harness</text>
+            <text class="c4-cap" x="464" y="142" text-anchor="middle" font-size="10.5">AI agent dựng tài liệu</text>
+            <text class="c4-cap" x="464" y="157" text-anchor="middle" font-size="10.5">yêu cầu phần mềm</text>
+
+            <!-- external systems -->
+            <rect class="c4-ext" x="716" y="46" width="174" height="64" rx="6"></rect>
+            <text class="c4-t" x="803" y="74" text-anchor="middle" font-size="13.5">LLM provider</text>
+            <text class="c4-cap" x="803" y="92" text-anchor="middle" font-size="10">OpenAI · Anthropic · …</text>
+            <rect class="c4-ext" x="716" y="170" width="174" height="64" rx="6"></rect>
+            <text class="c4-t" x="803" y="198" text-anchor="middle" font-size="13.5">Database</text>
+            <text class="c4-cap" x="803" y="216" text-anchor="middle" font-size="10">phiên · tài liệu · log</text>
+          </svg>
+        </div>
+        <div class="legend">
+          <span class="li">Khối <b style="color:var(--signal)">cam</b> = hệ thống đang xét · viền liền teal = tác nhân · viền đứt = hệ thống ngoài</span>
+        </div>
+      </section>
+
       <!-- HERO DIAGRAM -->
       <section class="section">
         <div class="section-label">
-          <span class="sn">◢</span> Một lượt chảy qua các trạm như thế nào
+          <span class="sn">◢</span> Bên trong — một lượt chảy qua các node
+        </div>
+        <div style="margin-bottom: 14px">
+          <span class="lvl"><span class="ln">Mức 2</span> Runtime</span>
         </div>
 
         <div class="diagram-wrap">
@@ -199,7 +250,7 @@
               rx="17"
             ></rect>
             <text class="io-label" x="680" y="155" text-anchor="middle">
-              TẠM DỪNG
+              INTERRUPT
             </text>
 
             <!-- nodes -->
@@ -212,10 +263,10 @@
               rx="4"
             ></rect>
             <text class="n-label" x="110" y="146" text-anchor="middle">
-              Phân loại
+              triage
             </text>
             <text class="n-sub" x="110" y="164" text-anchor="middle">
-              triage
+              phân loại
             </text>
 
             <rect
@@ -227,10 +278,10 @@
               rx="4"
             ></rect>
             <text class="n-label" x="110" y="296" text-anchor="middle">
-              Trò chuyện
+              converse
             </text>
             <text class="n-sub" x="110" y="314" text-anchor="middle">
-              converse
+              trò chuyện
             </text>
 
             <rect
@@ -242,10 +293,10 @@
               rx="4"
             ></rect>
             <text class="n-label" x="400" y="146" text-anchor="middle">
-              Điều phối
+              orchestrator
             </text>
             <text class="n-sub" x="400" y="164" text-anchor="middle">
-              orchestrator
+              điều phối
             </text>
 
             <rect
@@ -264,10 +315,10 @@
               text-anchor="middle"
               fill="#FF7A45"
             >
-              Suy nghĩ
+              analyze
             </text>
             <text class="n-sub" x="400" y="314" text-anchor="middle">
-              analyze
+              suy nghĩ
             </text>
 
             <rect
@@ -286,10 +337,10 @@
               text-anchor="middle"
               fill="#FF7A45"
             >
-              Hành động
+              tools
             </text>
             <text class="n-sub" x="400" y="454" text-anchor="middle">
-              tools
+              hành động
             </text>
 
             <rect
@@ -301,10 +352,10 @@
               rx="4"
             ></rect>
             <text class="n-label" x="680" y="296" text-anchor="middle">
-              Tóm tắt
+              summarize
             </text>
             <text class="n-sub" x="680" y="314" text-anchor="middle">
-              summarize
+              tóm tắt
             </text>
           </svg>
         </div>
@@ -315,7 +366,7 @@
           >
           <span class="li"
             ><span class="sw loop"></span> Vòng nóng — agent
-            <b style="color: var(--signal)">suy nghĩ ⇄ hành động</b> rồi quay
+            <b style="color: var(--signal)">analyze ⇄ tools</b> rồi quay
             lại</span
           >
           <span class="li">● Chấm sáng = một lượt đang chạy</span>
@@ -329,23 +380,23 @@
         </div>
         <div class="panel ticks">
           <div class="flow">
-            <span class="node">Tiếp nhận</span><span class="arr">→</span>
-            <span class="node">Phân loại</span><span class="arr">→</span>
-            <span class="node">Trò chuyện | Bắt tay làm</span
-            ><span class="arr">→</span> <span class="node s">Suy nghĩ</span
-            ><span class="arr">→</span> <span class="node s">Hành động</span
+            <span class="node">Người dùng</span><span class="arr">→</span>
+            <span class="node">triage</span><span class="arr">→</span>
+            <span class="node">converse · orchestrator</span
+            ><span class="arr">→</span> <span class="node s">analyze</span
+            ><span class="arr">→</span> <span class="node s">tools</span
             ><span class="arr">→</span>
-            <span class="node">Kiểm &amp; tóm tắt</span
+            <span class="node">summarize</span
             ><span class="arr">→</span>
-            <span class="node">Tạm dừng</span>
+            <span class="node">interrupt</span>
           </div>
           <p class="p" style="margin-top: 18px; margin-bottom: 0">
-            Mỗi lượt khép lại bằng một lần <b>tạm dừng</b> để chờ người dùng —
-            có thể là một câu hỏi làm rõ, một phần trình bày, một bản nháp xin
+            Mỗi lượt khép lại bằng một <b>interrupt</b> để chờ người dùng — có
+            thể là một câu hỏi làm rõ, một phần trình bày, một bản nháp xin
             duyệt, hay lời báo đã hoàn tất. Khi người dùng trả lời, agent quay
-            lại bước <b>suy nghĩ</b> và vòng lặp tiếp tục. Cứ sau một số lượt,
-            nó tự tóm tắt lại hội thoại để khỏi quá tải — nhưng những điều đã
-            chốt thì không bao giờ bị lược đi.
+            lại <b>analyze</b> và vòng lặp tiếp tục. Cứ sau một số lượt, node
+            <b>summarize</b> nén lại hội thoại để khỏi quá tải — nhưng những
+            điều đã chốt thì không bao giờ bị lược đi.
           </p>
         </div>
       </section>
@@ -390,7 +441,7 @@
           <a class="map-card" href="env.html">
             <span class="mt">Env</span>
             <span class="md"
-              >Phần khung cứng: các trạm, mô hình thay thế được, kho lưu
+              >Phần khung cứng: các node, mô hình thay thế được, kho lưu
               trữ.</span
             >
           </a>
@@ -410,7 +461,7 @@
         </div>
         <div class="grid cols-2">
           <div class="card signal">
-            <div class="kind">tại trạm suy nghĩ</div>
+            <div class="kind">tại node analyze</div>
             <div
               class="name"
               style="font-family: var(--display); color: var(--signal)"
@@ -424,7 +475,7 @@
             </div>
           </div>
           <div class="card signal">
-            <div class="kind">tại trạm hành động</div>
+            <div class="kind">tại node tools</div>
             <div
               class="name"
               style="font-family: var(--display); color: var(--signal)"
@@ -433,7 +484,7 @@
             </div>
             <div class="desc">
               Khi agent tự chấm điểm hay kiểm tra mức sẵn sàng, kết quả được ghi
-              vào trí nhớ rồi đưa nó quay lại bước suy nghĩ để sửa. Đó chính là
+              vào trí nhớ rồi đưa nó quay lại analyze để sửa. Đó chính là
               đoạn nóng khép kín trong sơ đồ trên.
             </div>
           </div>
